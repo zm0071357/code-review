@@ -31,4 +31,4 @@ jobs:
         run: mvn dependency:copy -Dartifact=top.xiaoming-programming:code-review-starter:1.0-SNAPSHOT -DoutputDirectory=./libs
 
       - name: Run Code Review
-        run: java -jar ./libs/code-review-starter-1.0.jar
+        run: java -jar ./libs/code-review-starter-1.0-SNAPSHOT.jar
