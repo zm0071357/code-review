@@ -103,7 +103,7 @@
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <mainClass>plus.gaga.middleware.sdk.OpenAiCodeReview</mainClass>
+                            <mainClass>code.review.sdk.CodeReviewConfig</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
