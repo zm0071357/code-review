@@ -1,0 +1,5 @@
+spring:
+  config:
+    name: code-review-test
+  profiles:
+    active: dev
