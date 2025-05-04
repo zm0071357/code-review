@@ -2,48 +2,28 @@ package code.review.sdk;
 
 import code.review.sdk.domain.model.DeepSeekResponse;
 import com.alibaba.fastjson2.JSON;
+import org.junit.Test;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-/**
- * 配置入口
- */
-public class CodeReviewConfig {
+public class APITest {
 
-    public static void main(String[] args) throws Exception {
-        // 代码检出
-        System.out.println("代码检出");
-        ProcessBuilder processBuilder = new ProcessBuilder("git", "diff", "HEAD~1", "HEAD");
-        processBuilder.directory(new File("."));
-        Process process = processBuilder.start();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line;
-
-        StringBuilder diffCode = new StringBuilder();
-        while ((line = reader.readLine()) != null) {
-            diffCode.append(line);
-        }
-
-        int exitCode = process.waitFor();
-        System.out.println("Exited with code:" + exitCode);
-        System.out.println("评审代码:" + diffCode.toString());
-
-        // DeepSeek代码评审
-        String log = codeReview(diffCode.toString());
-        System.out.println("codeReview" + log);
-    }
-
-    private static String codeReview(String diffCode) throws IOException {
+    @Test
+    public void test_http() throws IOException {
         String post_url = "https://api.deepseek.com/chat/completions";
         String apiKey = "sk-c98ad52dc764455e9957890820ee4e1c";
+        String code = "1+1";
         String json = "{\n" +
                 "        \"model\": \"deepseek-chat\",\n" +
                 "        \"messages\": [\n" +
                 "          {\"role\": \"system\", \"content\": \"You are a helpful assistant.\"},\n" +
-                "          {\"role\": \"user\", \"content\": \"你是一个高级编程架构师，精通各类场景方案、架构设计和编程语言请，请您根据git diff记录，对代码做出评审。代码为：" + diffCode + "\"} \n" +
+                "          {\"role\": \"user\", \"content\": \"你是一个高级编程架构师，精通各类场景方案、架构设计和编程语言请，请您根据git diff记录，对代码做出评审。代码为：" + code + "\"} \n" +
                 "        ],\n" +
                 "        \"stream\": false\n" +
                 "      }";
@@ -73,6 +53,6 @@ public class CodeReviewConfig {
         in.close();
         connection.disconnect();
         DeepSeekResponse deepSeekResponse = JSON.parseObject(content.toString(), DeepSeekResponse.class);
-        return deepSeekResponse.getChoices().get(0).getMessage().getContent();
+        System.out.println(deepSeekResponse.getChoices().get(0).getMessage().getContent());
     }
 }
