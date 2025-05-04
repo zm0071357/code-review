@@ -33,7 +33,6 @@ public class CodeReviewConfig {
 
         // DeepSeek代码评审
         String log = codeReview(diffCode.toString());
-        System.out.println("codeReview" + log);
     }
 
     private static String codeReview(String diffCode) throws IOException {
@@ -72,6 +71,7 @@ public class CodeReviewConfig {
         }
         in.close();
         connection.disconnect();
+        System.out.println("评审结果: " + content.toString());
         DeepSeekResponse deepSeekResponse = JSON.parseObject(content.toString(), DeepSeekResponse.class);
         return deepSeekResponse.getChoices().get(0).getMessage().getContent();
     }
