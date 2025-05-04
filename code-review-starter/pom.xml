@@ -135,6 +135,7 @@
                             <include>com.fasterxml.jackson.core:jackson-databind:</include>
                             <include>com.fasterxml.jackson.core:jackson-annotations:</include>
                             <include>org.eclipse.jgit:org.eclipse.jgit:</include>
+                            <include>org.projectlombok.lombok:</include>
                         </includes>
                     </artifactSet>
                 </configuration>
