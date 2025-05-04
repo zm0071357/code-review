@@ -27,5 +27,5 @@ jobs:
       - name: Run Java code
         run: |
           cd code-review-starter/src/main/java
-          javac /code/review/sdk/CodeReviewConfig.java
+          javac code/review/sdk/CodeReviewConfig.java
           java code.review.sdk.CodeReviewConfig
