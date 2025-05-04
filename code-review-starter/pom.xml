@@ -77,7 +77,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.24</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -121,21 +120,24 @@
                 <executions>
                     <execution>
                         <phase>package</phase>
+<!--                        <goals>-->
+<!--                            <goal>shade</goal>-->
+<!--                        </goals>-->
                     </execution>
                 </executions>
                 <configuration>
                     <artifactSet>
                         <includes>
-                            <include>com.google.guava:guava:jar:</include>
-                            <include>com.alibaba.fastjson2:fastjson2:jar:</include>
-                            <include>org.slf4j:slf4j-api:jar:</include>
-                            <include>org.slf4j:slf4j-simple:jar:</include>
-                            <include>com.auth0:java-jwt:jar:</include>
-                            <include>com.fasterxml.jackson.core:jackson-core:</include>
-                            <include>com.fasterxml.jackson.core:jackson-databind:</include>
-                            <include>com.fasterxml.jackson.core:jackson-annotations:</include>
-                            <include>org.eclipse.jgit:org.eclipse.jgit:</include>
-                            <include>org.projectlombok.lombok:jar:</include>
+                            <include>com.google.guava:guava</include>
+                            <include>com.alibaba.fastjson2:fastjson2</include>
+                            <include>org.slf4j:slf4j-api</include>
+                            <include>org.slf4j:slf4j-simple</include>
+                            <include>com.auth0:java-jwt</include>
+                            <include>com.fasterxml.jackson.core:jackson-core</include>
+                            <include>com.fasterxml.jackson.core:jackson-databind</include>
+                            <include>com.fasterxml.jackson.core:jackson-annotations</include>
+                            <include>org.eclipse.jgit:org.eclipse.jgit</include>
+                            <include>org.projectlombok:lombok</include>
                         </includes>
                     </artifactSet>
                 </configuration>
