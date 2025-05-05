@@ -124,7 +124,7 @@ public class CodeReviewConfig {
         }
         git.add().addFilepattern(dateFolderName + "/" + fileName).call();
         git.commit().setMessage("Add new File").call();
-        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(token, ""));
+        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(token, "")).call();
         return "https://github.com/zm0071357/code-review-log" + "/blob/master/" + dateFolderName + "/" + fileName;
     }
 
