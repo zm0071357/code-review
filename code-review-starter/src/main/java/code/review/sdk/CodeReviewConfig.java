@@ -2,11 +2,16 @@ package code.review.sdk;
 
 import code.review.sdk.domain.model.DeepSeekResponse;
 import com.alibaba.fastjson2.JSON;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
 
 /**
  * 配置入口
@@ -14,6 +19,11 @@ import java.nio.charset.StandardCharsets;
 public class CodeReviewConfig {
 
     public static void main(String[] args) throws Exception {
+        System.out.println("DeepSeek代码评审执行");
+        String token = System.getenv("GITHUB_TOKEN");
+        if (token == null || token.isEmpty()) {
+            throw new RuntimeException("token is null");
+        }
         // 代码检出
         System.out.println("代码检出");
         ProcessBuilder processBuilder = new ProcessBuilder("git", "diff", "HEAD~1", "HEAD");
@@ -33,6 +43,8 @@ public class CodeReviewConfig {
 
         // DeepSeek代码评审
         String log = codeReview(diffCode.toString());
+        // 写入日志
+        writeLog(token, log);
     }
 
     private static String codeReview(String diffCode) throws IOException {
@@ -75,4 +87,38 @@ public class CodeReviewConfig {
         DeepSeekResponse deepSeekResponse = JSON.parseObject(content.toString(), DeepSeekResponse.class);
         return deepSeekResponse.getChoices().get(0).getMessage().getContent();
     }
+
+    private static String writeLog(String token, String log) throws Exception {
+        String url = "https://github.com/zm0071357/code-review-log";
+        Git git = Git.cloneRepository()
+                .setURI(url)
+                .setDirectory(new File("repo"))
+                .setCredentialsProvider(new UsernamePasswordCredentialsProvider(token, ""))
+                .call();
+        String dateFolderName = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        File dateFolder = new File("repo/" + dateFolderName);
+        if (!dateFolder.exists()) {
+            dateFolder.mkdirs();
+        }
+        String fileName = generateRandomString(12) + ".md";
+        File newFile = new File(dateFolder, fileName);
+        try (FileWriter writer = new FileWriter(newFile)) {
+            writer.write(log);
+        }
+        git.add().addFilepattern(dateFolderName + "/" + fileName).call();
+        git.commit().setMessage("Add new File").call();
+        git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(token, ""));
+        return url + "/blob/master/" + dateFolderName + "/" + fileName;
+    }
+
+    private static String generateRandomString(int length) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            sb.append(characters.charAt(random.nextInt(characters.length())));
+        }
+        return sb.toString();
+    }
+
 }
