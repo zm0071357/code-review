@@ -2,6 +2,7 @@ package code.review.sdk;
 
 import code.review.sdk.domain.model.DeepSeekResponse;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
@@ -10,7 +11,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -50,14 +53,26 @@ public class CodeReviewConfig {
     private static String codeReview(String diffCode) throws IOException {
         String post_url = "https://api.deepseek.com/chat/completions";
         String apiKey = "sk-c98ad52dc764455e9957890820ee4e1c";
-        String json = "{\n" +
-                "        \"model\": \"deepseek-chat\",\n" +
-                "        \"messages\": [\n" +
-                "          {\"role\": \"system\", \"content\": \"You are a helpful assistant.\"},\n" +
-                "          {\"role\": \"user\", \"content\": \"" + "你是一个高级编程架构师，精通各类场景方案、架构设计和编程语言请，请您根据git diff记录，对代码做出评审。代码为: " +  diffCode + "\"}\n" +
-                "        ],\n" +
-                "        \"stream\": false\n" +
-                "      }";
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("model", "deepseek-chat");
+
+        // 构建消息列表
+        JSONObject systemMsg = new JSONObject();
+        systemMsg.put("role", "system");
+        systemMsg.put("content", "You are a helpful assistant.");
+
+        JSONObject userMsg = new JSONObject();
+        userMsg.put("role", "user");
+        userMsg.put("content", "你是一个高级编程架构师，请评审以下代码变更：" + diffCode);
+
+        List<JSONObject> messages = new ArrayList<>();
+        messages.add(systemMsg);
+        messages.add(userMsg);
+
+        requestBody.put("messages", messages);
+        requestBody.put("stream", false);
+
+        String json = JSON.toJSONString(requestBody);
 
         URL url = new URL(post_url);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
