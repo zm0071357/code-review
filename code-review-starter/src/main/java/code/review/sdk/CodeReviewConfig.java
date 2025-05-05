@@ -47,7 +47,9 @@ public class CodeReviewConfig {
         // DeepSeek代码评审
         String log = codeReview(diffCode.toString());
         // 写入日志
-        writeLog(token, log);
+        String writeLogUrl = writeLog(token, log);
+        System.out.println("日志地址:" + writeLogUrl);
+
     }
 
     private static String codeReview(String diffCode) throws IOException {
@@ -104,7 +106,7 @@ public class CodeReviewConfig {
     }
 
     private static String writeLog(String token, String log) throws Exception {
-        String url = "https://github.com/zm0071357/code-review-log";
+        String url = "https://github.com/zm0071357/code-review-log.git";
         Git git = Git.cloneRepository()
                 .setURI(url)
                 .setDirectory(new File("repo"))
@@ -123,7 +125,7 @@ public class CodeReviewConfig {
         git.add().addFilepattern(dateFolderName + "/" + fileName).call();
         git.commit().setMessage("Add new File").call();
         git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(token, ""));
-        return url + "/blob/master/" + dateFolderName + "/" + fileName;
+        return "https://github.com/zm0071357/code-review-log" + "/blob/master/" + dateFolderName + "/" + fileName;
     }
 
     private static String generateRandomString(int length) {
