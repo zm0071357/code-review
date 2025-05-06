@@ -57,6 +57,7 @@ public class CodeReviewConfig {
 
     private static String getEnv(String key) {
         String value = System.getenv(key);
+        log.info("key:{} value:{}", key, value);
         if (null == value || value.isEmpty()) {
             throw new RuntimeException("value is null");
         }
