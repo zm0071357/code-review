@@ -1,11 +1,11 @@
-package code.review.sdk.domain.model;
+package code.review.sdk.infrastructure.deepseek.dto.response;
 
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class DeepSeekResponse {
+public class DeepSeekResponseDTO {
     private String id;
     private String object;
     private long created;

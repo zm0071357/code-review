@@ -1,4 +1,4 @@
-package code.review.sdk.domain.model;
+package code.review.sdk.infrastructure.deepseek.dto.response;
 
 import lombok.Data;
 

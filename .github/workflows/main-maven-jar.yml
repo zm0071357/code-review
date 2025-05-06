@@ -30,7 +30,36 @@ jobs:
       - name: Copy code-review-starter JAR
         run: mvn dependency:copy -Dartifact=top.xiaoming-programming:code-review-starter:1.0-SNAPSHOT -DoutputDirectory=./libs
 
+      - name: Get repository name
+        id: repo-name
+        run: echo "REPO_NAME=${GITHUB_REPOSITORY##*/}" >> $GITHUB_ENV
+
+      - name: Get branch name
+        id: branch-name
+        run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+#      - name: Get commit author
+#        id: commit-author
+#        run: echo "COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an <%ae>')" >> $GITHUB_ENV
+
+#      - name: Get commit message
+#        id: commit-message
+#        run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
+
+      - name: Print repository, branch name, commit author, and commit message
+        run: |
+          echo "Repository name is ${{ env.REPO_NAME }}"
+          echo "Branch name is ${{ env.BRANCH_NAME }}"
+#          echo "Commit author is ${{ env.COMMIT_AUTHOR }}"
+#          echo "Commit message is ${{ env.COMMIT_MESSAGE }}"
+
       - name: Run Code Review
         run: java -jar ./libs/code-review-starter-1.0-SNAPSHOT.jar
         env:
           GITHUB_TOKEN: ${{secrets.CODE_TOKEN}}
+          WRITE_LOG_REPOSITORY_URL: ${{secrets.WRITE_LOG_REPOSITORY_URL}}
+          API_HOST: ${{secrets.API_HOST}}
+          API_KEY: ${{secrets.API_KEY}}
+          WEB_HOOK: ${{secrets.WEB_HOOK}}
+          PROJECT_NAME: ${{env.REPO_NAME}}
+          BRANCH_NAME: ${{env.BRANCH_NAME}}
